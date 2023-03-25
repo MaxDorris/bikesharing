@@ -2,48 +2,50 @@
 
 ## Overview
 ### Purpose and Background
-Python and Tableau were used to create a "Story" showing key insights from data collected from bike rental stations around Manhattan in 2019. This served as an introductory example for using SQLite and SQLalchemy to process real data and perform practical analyses. My task was to find the best month to open a surf shop in Hawaii. By analyzing historic temperature data from nine active weather stations in the area, a statistically-fortified decision was made possible for the business owner. For this mini-project, the task was simiplified to detmermining the better month out of June and December to open the shop.
+Python and Tableau were used to create a "story" with data collected from Citi Bike rental stations around NYC boroughs (mainly Manhattan) in 2019. Viuailzations were made to help support an entrepreneurs pitch of a similar bike service in Des Moines.
 
 ### Method and Results
-In the starter-file, hawaii.sqlite, the *'measurement'* table contained the columns: id, station, date, prcp, and tobs. These abbreviations describe columns for **row index**, **station id** where row data was collected, **date** on which row data was collected, **precipitation data* in inches**, and **observed temperature** data in Farenheit. The *'station'* table contained the columns: id, station, name, latitude, longitude, and elevation. The names of each station used in this analysis are listed below:
+#### Deliverable 1: Import, Clean, Rearrange, Export with Python
+
+After importing the published data into a Pandas dataframe in Python, I changed the datatype of the **tripduration** column from seconds (integer) to date and time (datetime). While converting a delta variable to a date and time is not visually useful in its raw form, it would manipulte the column to bin by hours and minutes in Tableau rather than having to create a complicated calculated field. I exported the data from Python after this was complete and uploaded it to Tableau.
+
+#### Deliverable 2: Tableau Visualizations
+##### Who Rides the Longest?
+My first dashboard made use of the tripduration, gender, and count (of all rows) columns in the dataset. I created two linegraphs that display number of yearly rides based on ride time in minutes. One side shows total riders, and the ther is broken up by gender. It is filterable by length in hours, but not many people rode longer than 45 minutes in 2019. The legend also includes a gender filter and gender color key.
 
 <p align="center">
-  <img width=auto height="500" src=images/station_names.png>
-  </p>
-
-I started by creating a SQLite database engine to store the hawaii.sqlite database. I then reflected the engine onto an automapped SQLite "schema" to store the relationships and classes of the database. Then I created two table references, "Measurement" and "Station". I then created a session object to make changes to these tables using SQL-like or class-based queries.
-
-#### Deliverable 1: June Analysis
-
-To create a summary of all historical data collected by all weather stations in previous years, I created a query selecting the **tobs** column of the **Measurement** table (*Measurement.tobs*). I filtered the output to only return temperature data on the same row as data values containing the month of June. I then transformed the resulting extraction to a list, and from this list, a dataframe.
-
-<p align="center">
-  <img width=auto height="500" src=images/june_summary.png>
+  <img width=auto height=auto src=images/page1.png>
   </p>
   
-- 1700 data point were collected in -previous Junes.
-- The June temperature data ranges from 65˚F to 85˚F, has a mean of 75.94˚F, and has a standard deviation of 3.26˚F.
+- 146,752 checkouts occurred with a length of approximately 5 minutes in 2019, the most frequent ride duration that year.
+- 108,087 of these checkouts were reportedly completed by men, while 33,041 were reportedly completed by women.
 
-#### Deliverable 2: December Analysis
-
-For this task I repeated the steps from D2, only I changed the filtering month to December.
+##### When Are Rides Most Frequent?
+My second dashboard made use of the gender, usertype, starttime, and count (of all rows) columns in the dataset. I created three heatmaps that equate color intensity to trip frequency. One map has weekday and hour of starttime as its axes, one map is arranged by hour of starttime, weekday, and gender, and the final map utilizes usertype rather than hour of starttime. The maps are filterable by gender, and the legend also includes color keys for each map's color intensity-value comparison.
 
 <p align="center">
-  <img width=auto height="500" src=images/dec_summary.png>
+  <img width=auto height=auto src=images/page2.png>
   </p>
   
-- 1517 data points were collected in previous Decembers.
-- The December temperature data ranges from 56˚F to 83˚F, has a mean of 71.04˚F, and has a standard deviation of 3.75˚F.
+- The greatest amount of checkouts occur at 6pm on Thursday, averaging 44,905 average rides for 2019.
+- 30,749 of these checkouts were by men, and 11,336 by women.
+- Male subscribers made up the largest demographic of riders on Thursdays, with a total of 259,316.
+
+##### Where Are Most People Beginning Their Rides?
+My third and final dashboard made use of the latitude, longitude, starttime, gender, and count (of all rows) columns in the dataset. I created two geographical maps of the greater NYC area. One map shows average trip frequency for each station, and the other shows the gender breakdown for each station per hour on average. The maps are both filterable by hour of the day with a handy slider in the legend (which can also play an automatic animation).The legend also includes color keys for user count and gender (different for each map).
+
+<p align="center">
+  <img width=auto height=auto src=images/page3.png>
+  </p>
+  
+- 5pm at Pershing Square North station is when / where the highest number of checkouts occurred on average in 2019.
+- Very few stations had more women than men renting bikes.
+- The most rides occur in the heart of Manhattan in the afternoon and early evening.
+
+#### Deliverable 3: Tableau Story
+A Tableau Story was created using the three dashboards created for deliverable 2. The finished product is shown below:
+
+[link to dashboard](https://public.tableau.com/app/profile/max.dorris/viz/NYC_Citi_Bikes_16796136311070/BIKERENTALSINNYC?publish=yes "Link to the Dashboards")
 
 ### Conclusion
-It appears as though June is the better month to open based on temperature data alone. I personally prefer surfing in hotter weather, and I believe this is the majority-held preference. I also prefer to surf when there is zero chance of being struck by lightning. Assuming that this preference is also held by a majority of surfers and that lightning has a greater chance of striking when it rains, I'll make two other queries that focus on precipitation data for these months to see if the choice in opening month is still obvious.
-
-<p align="center">
-  <img width=auto height="500" src=images/June_prcp_summary.png>
-  </p>
-
-<p align="center">
-  <img width=auto height="500" src=images/Dec_prcp_summary.png>
-  </p>
-
-It seems as though rain is not a major inhibitor in either month. Hawaii experienced less total rain in previous June than Decemeber months. However, hurricane season in Hawaii falls between the months of June to November. This small piece of information renders this entire analysis slightly pointless because a surf shop's opening day should probably be at the start of a season without hurricanes, though we still managed to use SQLite and SQLalchemy to process a database without the need for the PostgreSQL interface! :)
+While my visualizations turned out nicely and effectively tell us about the state of Citi Bike ride sharing in NYC in 2019, I am not sure that they tell the best story for our entrepreneur's objective. To better persuade investors, we will need to draw more comparisons between the two cities by relating the captured habits of New York users to potential users in Des Moines. This is virtually impossible with our current dataset, other than merely assuming that "of course a scaled down version of NYC's success could exist in other smaller cities." Projecting in this manner is obviously not the best approach to protecting the future of her startup, and I would suggest she research / compare Des Moines's incomes, commute distances, current public transportation routes, and remote worker concentration to that of New York City as well.
